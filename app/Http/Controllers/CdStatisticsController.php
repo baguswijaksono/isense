@@ -17,7 +17,11 @@ class CdStatisticsController extends Controller
     
     public function realtime($deviceid)
     {
-        $data = cdStatistic::where('deviceid', $deviceid)->latest()->get();
+        $data = cdStatistic::where('deviceid', $deviceid)
+        ->latest()
+        ->take(10)
+        ->get();
+    
         return response()->json(['data' => $data]);
     }
     
@@ -118,7 +122,6 @@ class CdStatisticsController extends Controller
         $averagePeopleCount = $data2->avg('peoplecount');
         $totalDataRecord = $data->count();
         
-
         if ($type == 1) {
                 return view('statistic.cdstatistic', [
                     'data' => $data,
