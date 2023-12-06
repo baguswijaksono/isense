@@ -11,20 +11,26 @@ use Carbon\Carbon;
 class CdStatisticsController extends Controller
 {
 
-    public function rtlc($deviceId) {
+    public function rtlc($deviceId)
+    {
         return view('rtlc', ['deviceid' => $deviceId]);
     }
-    
+
     public function realtime($deviceid)
     {
         $data = cdStatistic::where('deviceid', $deviceid)
-        ->latest()
-        ->take(10)
-        ->get();
-    
+            ->latest()
+            ->take(10)
+            ->get();
+
         return response()->json(['data' => $data]);
     }
-    
+
+    public function showrt($deviceid)
+    {
+        return view('statistic.cdstatisticrt', ['deviceid' => $deviceid]);
+    }
+
     public function delrecord(Request $request)
     {
         $id = $request->input('id');
@@ -71,7 +77,7 @@ class CdStatisticsController extends Controller
     }
 
 
-    public function show($id, $date, $enddate, $ftime, $totime, $type)
+    public function show($id, $date, $enddate, $ftime, $totime)
     {
         $listdata = Rtsp::all();
 
@@ -101,65 +107,48 @@ class CdStatisticsController extends Controller
         }
 
         $data = cdStatistic::where('deviceid', $id)
-        ->whereBetween('time', [$beforeTime, $currentTime])
-        ->whereBetween('date', [$currentDate, $finenddate])
-        ->get();
+            ->whereBetween('time', [$beforeTime, $currentTime])
+            ->whereBetween('date', [$currentDate, $finenddate])
+            ->get();
 
-    $data2 = cdStatistic::where('deviceid', $id)
-        ->whereBetween('time', [$beforeTime, $currentTime])
-        ->whereBetween('date', [$currentDate, $finenddate])
-        ->orderBy('peoplecount', 'desc')
-        ->orderBy('time', 'asc')
-        ->get();
+        $data2 = cdStatistic::where('deviceid', $id)
+            ->whereBetween('time', [$beforeTime, $currentTime])
+            ->whereBetween('date', [$currentDate, $finenddate])
+            ->orderBy('peoplecount', 'desc')
+            ->orderBy('time', 'asc')
+            ->get();
 
-    if ($data2->count() > 0) {
-        $greatestPeopleCountRecord = $data2->first();
-        $lowestPeopleCountRecord = $data2->last();
-        $greatestPeopleCount = $greatestPeopleCountRecord->peoplecount;
-        $lowestPeopleCount = $lowestPeopleCountRecord->peoplecount;
-        $timeOfGreatestPeopleCount = $greatestPeopleCountRecord->time;
-        $timeOfLowestPeopleCount = $lowestPeopleCountRecord->time;
-        $averagePeopleCount = $data2->avg('peoplecount');
-        $totalDataRecord = $data->count();
-        
-        if ($type == 1) {
-                return view('statistic.cdstatistic', [
-                    'data' => $data,
-                    'data2' => $data2,
-                    'type' => $type,
-                    'device' => $id,
-                    'from' => $beforeTime,
-                    'date' => $currentDate,
-                    'finenddate' => $finenddate,
-                    'to' => $currentTime,
-                    'listdata' => $listdata,
-                    'lowestPeopleCount' => $lowestPeopleCount,
-                    'greatestPeopleCount' => $greatestPeopleCount,
-                    'timeOfGreatestPeopleCount' => $timeOfGreatestPeopleCount,
-                    'timeOfLowestPeopleCount' => $timeOfLowestPeopleCount,
-                    'averagePeopleCount' => $averagePeopleCount,
-                    'totalDataRecord' => $totalDataRecord
-                ]);
-            } else {
+        if ($data2->count() > 0) {
+            $greatestPeopleCountRecord = $data2->first();
+            $lowestPeopleCountRecord = $data2->last();
+            $greatestPeopleCount = $greatestPeopleCountRecord->peoplecount;
+            $lowestPeopleCount = $lowestPeopleCountRecord->peoplecount;
+            $timeOfGreatestPeopleCount = $greatestPeopleCountRecord->time;
+            $timeOfLowestPeopleCount = $lowestPeopleCountRecord->time;
+            $averagePeopleCount = $data2->avg('peoplecount');
+            $totalDataRecord = $data->count();
 
-                return view('statistic.cdstatistic', [
-                    'data' => $data,
-                    'data2' => $data2,
-                    'type' => $type,
-                    'device' => $id,
-                    'from' => $beforeTime,
-                    'date' => $currentDate,
-                    'finenddate' => $finenddate,
-                    'to' => $currentTime,
-                    'listdata' => $listdata,
-                ]);
-
-            }
-
-
+            return view('statistic.cdstatistic', [
+                'data' => $data,
+                'data2' => $data2,
+                'device' => $id,
+                'from' => $beforeTime,
+                'date' => $currentDate,
+                'finenddate' => $finenddate,
+                'to' => $currentTime,
+                'listdata' => $listdata,
+                'lowestPeopleCount' => $lowestPeopleCount,
+                'greatestPeopleCount' => $greatestPeopleCount,
+                'timeOfGreatestPeopleCount' => $timeOfGreatestPeopleCount,
+                'timeOfLowestPeopleCount' => $timeOfLowestPeopleCount,
+                'averagePeopleCount' => $averagePeopleCount,
+                'totalDataRecord' => $totalDataRecord
+            ]);
         }
 
-
-
     }
+
+
+
 }
+

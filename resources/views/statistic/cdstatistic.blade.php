@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
-
     <div class="container">
         <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
             aria-controls="offcanvasExample">
@@ -21,15 +19,25 @@
                 <div class="row">
                     <div class="col mb-3">
                         <label class="form-label">Type</label>
-                        <select class="form-select mb-3" name="type" id="type">
-                            @if ($type == 1)
-                                <option value="1" selected>Filter</option>
-                                <option value="2">Realtime</option>
-                            @else
-                                <option value="2" selected>Realtime</option>
-                                <option value="1">Filter</option>
-                            @endif
+                        <select class="form-select mb-3" name="type" id="type" onchange="redirectToRoute(this)">
+                            <option value="1" selected>Filter</option>
+                            <option value="2">Realtime</option>
                         </select>
+                        @php
+                            echo "
+                        <script>
+                            function redirectToRoute(selectElement) {
+                                var selectedValue = selectElement.value;
+                                if (selectedValue === '2') {
+                                    var device = '" . $device . "';
+                                    window.location.href = '/statistic/' + device + '/realtime';
+                                }
+                            }
+                        </script>
+                        ";
+                        @endphp
+
+
                     </div>
 
                     <div class="col mb-3">
@@ -70,7 +78,7 @@
                     </div>
 
                     <div class="col">
-                        <button type="button" class="btn btn sm btn-primary" id="goButton">Go</button>
+                        <button type="button" class="btn btn sm btn-dark" id="goButton">Go</button>
                     </div>
                 </div>
 
@@ -81,8 +89,7 @@
                         var enddate = document.getElementById('enddate').value;
                         var fromTime = document.getElementById('from').value;
                         var toTime = document.getElementById('to').value;
-                        var type = document.getElementById('type').value;
-                        var redirectUrl = `/statistic/${streamName}/${date}/${enddate}/${fromTime}/${toTime}/${type}`;
+                        var redirectUrl = `/statistic/${streamName}/${date}/${enddate}/${fromTime}/${toTime}`;
                         window.location.href = redirectUrl;
                     });
                 </script>
@@ -92,20 +99,17 @@
         </div>
     </div>
 
+    <div class="container">
+        @include('layouts.filteredlinechart')
 
-    @if ($type == 1)
-        <div class="container">
-            @include('layouts.filteredlinechart')
+    </div>
 
-            <div class="h6"> Lowest People Count : {{ $lowestPeopleCount }}</div>
-            <div class="h6"> Greatest People Count : {{ $greatestPeopleCount }}</div>
-            <div class="h6"> Time Of Greatest PeopleCount : {{ $timeOfGreatestPeopleCount }}</div>
-            <div class="h6"> Time Of Lowest People Count : {{ $timeOfLowestPeopleCount }}</div>
-            <div class="h6"> Average People Count : {{ $averagePeopleCount }}</div>
-            <div class="h6"> Total Data Record : {{ $totalDataRecord }}</div>
-        </div>
-    @elseif($type == 2)
-        <div class="container" style="width : 800px"> <iframe src="/rtlc/{{ $device }}"></iframe>
-        </div>
-    @endif
+    <div class="container">
+        <div class="h6"> Lowest People Count : {{ $lowestPeopleCount }}</div>
+        <div class="h6"> Greatest People Count : {{ $greatestPeopleCount }}</div>
+        <div class="h6"> Time Of Greatest PeopleCount : {{ $timeOfGreatestPeopleCount }}</div>
+        <div class="h6"> Time Of Lowest People Count : {{ $timeOfLowestPeopleCount }}</div>
+        <div class="h6"> Average People Count : {{ $averagePeopleCount }}</div>
+        <div class="h6"> Total Data Record : {{ $totalDataRecord }}</div>
+    </div>
 @endsection

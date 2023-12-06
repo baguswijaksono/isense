@@ -34,7 +34,8 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/datarecord/{id}', [CdStatisticsController::class, 'showlist'])->name('datarecord');
     Route::get('/datarecord/{id}/{date}', [CdStatisticsController::class, 'showlistdetail'])->name('datarecorddetail');
-    Route::get('/statistic/{id}/{date}/{enddate}/{ftime}/{totime}/{type}', [CdStatisticsController::class, 'show'])->name('cdstatistic');
+    Route::get('/statistic/{id}/{date}/{enddate}/{ftime}/{totime}', [CdStatisticsController::class, 'show'])->name('cdstatistic');
+    Route::get('/statistic/{id}/realtime', [CdStatisticsController::class, 'showrt'])->name('cdstatisticrt');
     Route::get('/excelexport', [ExportController::class, 'exportToExcel'])->name('ex.export');
 });
 
