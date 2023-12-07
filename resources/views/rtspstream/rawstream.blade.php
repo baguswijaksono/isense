@@ -52,25 +52,7 @@
                             <h1 class="video-title">{{ $data->name }}</h1>
                         </div>
                         <div class="col-1 p-2">
-                            <button class="btn btn-dark btn-sm" id="loadFileBtn">Start</button>
-                            <script>
-                                $(document).ready(function() {
-                                  $('#loadFileBtn').click(function() {
-                                    $.ajax({
-                                      url: '/live/index.php', // Replace with the correct path
-                                      type: 'GET',
-                                      success: function(response) {
-                                        console.log('File loaded successfully!');
-                                        $('#result').html(response);
-                                      },
-                                      error: function(xhr, status, error) {
-                                        console.error(error);
-                                      }
-                                    });
-                                  });
-                                });
-                              </script>
-                              
+                            <a href="{{ route('cdstatisticfilt', ['id' => $data->name]) }}" class="btn btn-dark btn-sm" >Stat</a>
                         </div>
                     </div>
                     <p class="video-description">{{ $data->description }}</p>

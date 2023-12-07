@@ -77,38 +77,64 @@ class CdStatisticsController extends Controller {
             ->orderBy('time', 'asc')
             ->get();
 
-        $first = $data->first();
-        $date = $first->date;
-        $time = $first->time;
-        $last = $data->last();
-        $enddate = $last->date;
-        $endtime = $last->time;
+        
+        if ($data->count() === 0) {
+            $first = $data->first();
+            $date = $first->date;
+            $time = $first->time;
+            $last = $data->last();
+            $enddate = $last->date;
+            $endtime = $last->time;
+    
+            return view('statistic.cdstatistic', [
+                'nodata' => true, 
+                'finenddate' => $enddate,
+                'date' => $date,
+                'from' => $time,
+                'to' => $endtime,
+                'listdata' => $listdata,
+                'data' => $data,
+                'device' => $id,
+     
+            ]);
+        } else {
+            $first = $data->first();
+            $date = $first->date;
+            $time = $first->time;
+            $last = $data->last();
+            $enddate = $last->date;
+            $endtime = $last->time;
+    
+            $greatestPeopleCount = $data->max('peoplecount');
+            $lowestPeopleCount = $data->min('peoplecount');
+    
+            $timeOfGreatestPeopleCount = $data->where('peoplecount', $greatestPeopleCount)->pluck('time')->first();
+            $timeOfLowestPeopleCount = $data->where('peoplecount', $lowestPeopleCount)->pluck('time')->first();
+    
+            $averagePeopleCount = $data->avg('peoplecount');
+            $totalDataRecord = $data->count();
+    
+    
+            return view('statistic.cdstatistic', [
+                'nodata' => false, 
+                'finenddate' => $enddate,
+                'date' => $date,
+                'from' => $time,
+                'to' => $endtime,
+                'listdata' => $listdata,
+                'data' => $data,
+                'device' => $id,
+                'lowestPeopleCount' => $lowestPeopleCount,
+                'greatestPeopleCount' => $greatestPeopleCount,
+                'timeOfGreatestPeopleCount' => $timeOfGreatestPeopleCount,
+                'timeOfLowestPeopleCount' => $timeOfLowestPeopleCount,
+                'averagePeopleCount' => $averagePeopleCount,
+                'totalDataRecord' => $totalDataRecord
+            ]);
+        }
+        
 
-        $greatestPeopleCount = $data->max('peoplecount');
-        $lowestPeopleCount = $data->min('peoplecount');
-
-        $timeOfGreatestPeopleCount = $data->where('peoplecount', $greatestPeopleCount)->pluck('time')->first();
-        $timeOfLowestPeopleCount = $data->where('peoplecount', $lowestPeopleCount)->pluck('time')->first();
-
-        $averagePeopleCount = $data->avg('peoplecount');
-        $totalDataRecord = $data->count();
-
-
-        return view('statistic.cdstatistic', [
-            'finenddate' => $enddate,
-            'date' => $date,
-            'from' => $time,
-            'to' => $endtime,
-            'listdata' => $listdata,
-            'data' => $data,
-            'device' => $id,
-            'lowestPeopleCount' => $lowestPeopleCount,
-            'greatestPeopleCount' => $greatestPeopleCount,
-            'timeOfGreatestPeopleCount' => $timeOfGreatestPeopleCount,
-            'timeOfLowestPeopleCount' => $timeOfLowestPeopleCount,
-            'averagePeopleCount' => $averagePeopleCount,
-            'totalDataRecord' => $totalDataRecord
-        ]);
+  
 
 
     }
@@ -165,6 +191,7 @@ class CdStatisticsController extends Controller {
             $totalDataRecord = $data->count();
 
             return view('statistic.cdstatistic', [
+                'nodata' => false, 
                 'data' => $data,
                 'data2' => $data2,
                 'device' => $id,
@@ -180,6 +207,18 @@ class CdStatisticsController extends Controller {
                 'averagePeopleCount' => $averagePeopleCount,
                 'totalDataRecord' => $totalDataRecord
             ]);
+        }else{
+            return view('statistic.cdstatistic', [
+                'listdata' => $listdata,
+                'to' => $currentTime,
+                'from' => $beforeTime,
+                'finenddate' => $finenddate,
+                'date' => $currentDate,
+                'device' => $id,
+                'data' => $data,
+                'nodata' => true, 
+            ]);
+            
         }
 
     }

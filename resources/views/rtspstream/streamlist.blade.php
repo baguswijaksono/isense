@@ -8,7 +8,6 @@
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Raw Url</th>
-                    <th scope="col">Processed Url</th>
                     <th scope="col">Description</th>
                     <th scope="col">Data Record</th>
                     <th scope="col">Statistic</th>
@@ -25,24 +24,14 @@
                     <tr>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->raw_url }}</td>
-                        <td>{{ $item->processed_url }}</td>
                         <td>{{ $item->description }}</td>
                         <td>
                             <a href="{{route('datarecord' , ['id' => $item->name])}}" class="btn btn-primary">Data Record</a>
                         </td>
                         <td>
-                            @php
-                            $currentDate = \Carbon\Carbon::now('Asia/Jakarta')->format('Y-m-d');
+                    
                             
-                            $hoursBefore = 1;
-                            $beforeTime = \Carbon\Carbon::now('Asia/Jakarta')
-                                ->subHours($hoursBefore)
-                                ->format('H:i:s');
-                            
-                            $currentTime = \Carbon\Carbon::now('Asia/Jakarta')->format('H:i:s');
-                            @endphp
-                            
-                            <a href="{{ route('cdstatistic', ['id' => $item->name , 'date' => $currentDate ,'enddate' => $currentDate ,  'ftime' => $beforeTime , 'totime' => $currentTime, 'type' => 1]) }}" class="btn btn-primary"><svg
+                            <a href="{{ route('cdstatisticfilt', ['id' => $item->name]) }}" class="btn btn-primary"><svg
                                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-graph-up" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd"

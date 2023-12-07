@@ -76,10 +76,9 @@
                         <input class="form-control" type="time" name="to" id="to"
                             value="{{ $to }}" />
                     </div>
-
-                    <div class="col">
-                        <button type="button" class="btn btn sm btn-dark" id="goButton">Go</button>
-                    </div>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn sm btn-dark" id="goButton">Go</button>
                 </div>
 
                 <script>
@@ -98,18 +97,23 @@
 
         </div>
     </div>
+    @if ($nodata)
+        <div class="container">
+            No Data Found.
+        </div>
+    @else
+        <div class="container">
+            @include('layouts.filteredlinechart')
 
-    <div class="container">
-        @include('layouts.filteredlinechart')
+        </div>
 
-    </div>
-
-    <div class="container">
-        <div class="h6"> Lowest People Count : {{ $lowestPeopleCount }}</div>
-        <div class="h6"> Greatest People Count : {{ $greatestPeopleCount }}</div>
-        <div class="h6"> Time Of Greatest PeopleCount : {{ $timeOfGreatestPeopleCount }}</div>
-        <div class="h6"> Time Of Lowest People Count : {{ $timeOfLowestPeopleCount }}</div>
-        <div class="h6"> Average People Count : {{ $averagePeopleCount }}</div>
-        <div class="h6"> Total Data Record : {{ $totalDataRecord }}</div>
-    </div>
+        <div class="container">
+            <div class="h6"> Lowest People Count : {{ $lowestPeopleCount }}</div>
+            <div class="h6"> Greatest People Count : {{ $greatestPeopleCount }}</div>
+            <div class="h6"> Time Of Greatest PeopleCount : {{ $timeOfGreatestPeopleCount }}</div>
+            <div class="h6"> Time Of Lowest People Count : {{ $timeOfLowestPeopleCount }}</div>
+            <div class="h6"> Average People Count : {{ $averagePeopleCount }}</div>
+            <div class="h6"> Total Data Record : {{ $totalDataRecord }}</div>
+        </div>
+    @endif
 @endsection
