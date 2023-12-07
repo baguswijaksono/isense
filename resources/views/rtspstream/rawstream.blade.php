@@ -2,6 +2,9 @@
 
 @section('content')
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<!-- Include jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <style>
         .iframe-container {
             display: inline-block;
@@ -49,16 +52,25 @@
                             <h1 class="video-title">{{ $data->name }}</h1>
                         </div>
                         <div class="col-1 p-2">
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-secondary" type="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    {{ $streamtype }}
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item"
-                                            href="{{ route('rawstream', ['id' => $data->id]) }}">Raw</a></li>
-                                </ul>
-                            </div>
+                            <button class="btn btn-dark btn-sm" id="loadFileBtn">Start</button>
+                            <script>
+                                $(document).ready(function() {
+                                  $('#loadFileBtn').click(function() {
+                                    $.ajax({
+                                      url: '/live/index.php', // Replace with the correct path
+                                      type: 'GET',
+                                      success: function(response) {
+                                        console.log('File loaded successfully!');
+                                        $('#result').html(response);
+                                      },
+                                      error: function(xhr, status, error) {
+                                        console.error(error);
+                                      }
+                                    });
+                                  });
+                                });
+                              </script>
+                              
                         </div>
                     </div>
                     <p class="video-description">{{ $data->description }}</p>
