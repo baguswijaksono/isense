@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/private/img/{imageName}', [FileController::class, 'showimage'])->name('img.show');
     Route::get('/realtime/{deviceid}', [CdStatisticsController::class, 'realtime'])->name('cd.realtime');
     Route::get('/rtlc/{deviceid}', [CdStatisticsController::class, 'rtlc'])->name('rtlc');
+    Route::get('/rtsr/{deviceid}', [CdStatisticsController::class, 'rtsr'])->name('rtsr');
     
     Route::get('/stream/{id}/raw', [StreamController::class, 'rawstream'])->name('rawstream');
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

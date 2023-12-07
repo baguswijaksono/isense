@@ -7,22 +7,14 @@
 
     <style>
         .iframe-container {
-            display: inline-block;
             width: 100%;
-            /* Set the width as needed */
-            height: 500px;
-            /* Set the height as needed */
-            overflow: hidden;
-            /* Hide any overflowing content */
-            margin: 0;
-            padding: 0;
+            height: 250px;
         }
 
         .iframe-container iframe {
             width: 100%;
             height: 100%;
             border: none;
-            /* Remove iframe border */
         }
     </style>
     <div class="container">
@@ -72,8 +64,11 @@
                     </select>
                 </div>
 
-                <div class="mb-3 iframe-container">
+                <div class="iframe-container">
                     <iframe src="/rtlc/{{ $data->name }}" frameborder="0"></iframe>
+                </div>
+                <div class="iframe-container">
+                    <iframe src="/rtsr/{{ $data->name }}" frameborder="0"></iframe>
                 </div>
                 <script>
                     var streamSelect = document.getElementById("streamSelect");

@@ -14,6 +14,10 @@ class CdStatisticsController extends Controller {
         return view('rtlc', ['deviceid' => $deviceId]);
     }
 
+    public function rtsr($deviceId) {
+        return view('rtsr', ['deviceid' => $deviceId]);
+    }
+
     public function realtime($deviceid) {
         $data = cdStatistic::where('deviceid', $deviceid)
             ->latest()
@@ -22,6 +26,8 @@ class CdStatisticsController extends Controller {
 
         return response()->json(['data' => $data]);
     }
+
+
 
     public function showrt($deviceid) {
         return view('statistic.cdstatisticrt', ['deviceid' => $deviceid]);
