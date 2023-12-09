@@ -17,6 +17,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('deviceid');
             $table->integer('peoplecount');
+            $table->integer('people_with_mask');
+            $table->integer('people_without_mask');
             $table->date('date');
             $table->time('time');
         });

@@ -59,7 +59,7 @@
     </div>
 
     <div class="container">
-        <iframe src="/rtlc/{{ $deviceid }}" style="width: 100%; height: 800px;"></iframe>
+        <iframe src="/rtlc/{{ $deviceid }}" style="width: 100%; height: 700px;"></iframe>
         <iframe src="/rtsr/{{ $deviceid }}" style="width: 100%; height: 800px;"></iframe>
     </div>
     
