@@ -9,50 +9,70 @@ use App\Http\Controllers\FileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::redirect('/', '/home');
 
-
+//Grup Endpoint khusus user terautentikasi
 Route::middleware(['auth'])->group(function() {
-    Route::get('/streamlist', [StreamController::class, 'showStream'])->name('streamlist');
+
+    //Endpoint setelah berhasil autentikasi
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');//done
+
+    //Endpoint buat list raw stream yang tersedia
+    Route::get('/streamlist', [StreamController::class, 'showStream'])->name('streamlist');//done
+
+    //Endpoint buat halaman raw stream
+    Route::get('/stream/{id}/raw', [StreamController::class, 'rawstream'])->name('rawstream');
     
-    Route::get('/private/img/{imageName}', [FileController::class, 'showimage'])->name('img.show');
+    //Endpoint buat display gambar 
+    Route::get('/private/img/{imageName}', [FileController::class, 'showimage'])->name('img.show');//done
+
+    //Endpoint buat display JSON data terbaru yang ada di collection cd_statistics 
     Route::get('/realtime/{deviceid}', [CdStatisticsController::class, 'realtime'])->name('cd.realtime');
+
+    //Endpoint buat view realtime realtime linechart
     Route::get('/rtlc/{deviceid}', [CdStatisticsController::class, 'rtlc'])->name('rtlc');
+
+    //Endpoint buat view realtime statistic report
     Route::get('/rtsr/{deviceid}', [CdStatisticsController::class, 'rtsr'])->name('rtsr');
     
-    Route::get('/stream/{id}/raw', [StreamController::class, 'rawstream'])->name('rawstream');
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    //Endpoint buat display data record collection cdstatistics
     Route::get('/datarecord/{id}', [CdStatisticsController::class, 'showlist'])->name('datarecord');
     Route::get('/datarecord/{id}/{date}', [CdStatisticsController::class, 'showlistdetail'])->name('datarecorddetail');
+
+    //Endpoint buat display statistic crowd detection yang difilter 
     Route::get('/statistic/{id}/filter', [CdStatisticsController::class, 'showplainfilt'])->name('cdstatisticfilt');
     Route::get('/statistic/{id}/{date}/{enddate}/{ftime}/{totime}', [CdStatisticsController::class, 'show'])->name('cdstatistic');
+
+    //Endpoint buat display statistic crowd detection secara realtime 
     Route::get('/statistic/{id}/realtime', [CdStatisticsController::class, 'showrt'])->name('cdstatisticrt');
+
+    //Endpoint buat export data ke excel 
     Route::get('/excelexport', [ExportController::class, 'exportToExcel'])->name('ex.export');
 });
 
-
+//Grup Endpoint khusus user terautentikasi dan mempunyai role 'admin'
 Route::middleware(['admin'])->group(function() {
-    Route::post('/singledeldatarecord', [CdStatisticsController::class, 'singledeldatarecord'])->name('singledeldatarecord');
-    Route::post('/datarecord/del', [CdStatisticsController::class, 'delrecord'])->name('delrecord');
-    Route::get('/addstream', [StreamController::class, 'addStream'])->name('addstream');
-    Route::post('/storeStream', [StreamController::class, 'storeStream'])->name('storeStream');
-    Route::post('/storeUpdateStream', [StreamController::class, 'updateStream'])->name('storeUpStream');
-    Route::post('/delstream', [StreamController::class, 'delStream'])->name('delstream');
-    Route::get('/streamlist/{id}/edit', [StreamController::class, 'editStream'])->name('editstream');
-    Route::get('/mqqtconfig', [MqqtController::class, 'index'])->name('mqqtconf');
-    Route::get('/startsubmqqt', [MqqtController::class, 'start'])->name('startmqqtsub');
-    Route::post('/mqqtconfigStore', [MqqtController::class, 'store'])->name('storeMqqconf');
+
+    //Endpoint buat export data ke excel 
+    Route::post('/singledeldatarecord', [CdStatisticsController::class, 'singledeldatarecord'])->name('singledeldatarecord');//done
+    Route::post('/datarecord/del', [CdStatisticsController::class, 'delrecord'])->name('delrecord');//done
+
+    //Endpoint Create data raw stream
+    Route::get('/addstream', [StreamController::class, 'addStream'])->name('addstream');//done
+    Route::post('/storeStream', [StreamController::class, 'storeStream'])->name('storeStream');//done
+
+    //Endpoint Update data raw stream
+    Route::get('/streamlist/{id}/edit', [StreamController::class, 'editStream'])->name('editstream');//done
+    Route::post('/storeUpdateStream', [StreamController::class, 'updateStream'])->name('storeUpStream');//done
+
+    //Endpoint Delete data raw stream
+    Route::post('/delstream', [StreamController::class, 'delStream'])->name('delstream');//done
+    
+    //Endpoint buat ngatur configurasi subscriber mqqt 
+    Route::get('/mqqtconfig', [MqqtController::class, 'index'])->name('mqqtconf');//done
+
+    //Endpoint buat store data subscriber mqqt 
+    Route::post('/mqqtconfigStore', [MqqtController::class, 'store'])->name('storeMqqconf');//done
 });
 
 Auth::routes();
