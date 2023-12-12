@@ -28,7 +28,6 @@ class CdStatisticsController extends Controller {
     }
 
 
-
     public function showrt($deviceid) {
         return view('statistic.cdstatisticrt', ['deviceid' => $deviceid]);
     }

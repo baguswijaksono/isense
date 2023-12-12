@@ -22,24 +22,36 @@ class MqttSubscriber extends Command
         $mqttClient = Mqtt::first();
         $client = new MqttClient($mqttClient->host, $mqttClient->port, "ClientID");
         $client->connect();
-        $client->subscribe($mqttClient->topic, function ($topic, $message , $qos) use ($mqttClient) {
-            $this->info("Received message on topic '$topic' from host $mqttClient->host:  $message" );
+        $client->subscribe($mqttClient->topic, function ($topic, $message, $qos) use ($mqttClient) {
+            $this->info("Received message on topic '$topic' from host $mqttClient->host:  $message");
 
             $fixid_json = str_replace(
                 [':', ', ', '{', '}'],
                 ['":"', '", "', '{"', '"}'],
                 $message
             );
-            
+
             $parsedData = json_decode($fixid_json, true);
 
+            $timestamp = $parsedData['timestamp']; 
+
+            $hours = date('H', $timestamp);
+            $minutes = date('i', $timestamp);
+            $seconds = date('s', $timestamp);
+
             cdStatistic::Create([
-                "deviceid" => $parsedData['device_id'],
-                "peoplecount" => $parsedData['people_total'],
+                "deviceid" => trim($parsedData['device_id']),
+                "peoplecount" => trim($parsedData['people_total']),
+                'people_with_mask' => trim($parsedData['people_with_mask']), 
+                'people_without_mask' => trim($parsedData['people_without_mask']),                
                 'time' => date('H:i:s', $parsedData['timestamp']),
                 'date' => date('Y-m-d', $parsedData['timestamp']),
+                'hours' => $hours,
+                'minutes' => $minutes, 
+                'seconds' => $seconds, 
             ]);
-        
+
+
 
         });
 

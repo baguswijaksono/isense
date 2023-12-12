@@ -10,7 +10,7 @@ class cdStatistic extends Model
     protected $connection = 'mongodb';
     protected $collection = 'cd_statistics';
 
-    protected $fillable = ['deviceid','peoplecount','people_with_mask','people_without_mask','date','time'];
+    protected $fillable = ['deviceid','peoplecount','people_with_mask','people_without_mask','date','time','hours','minutes','seconds'];
 
     use HasFactory;
 }

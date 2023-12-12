@@ -21,9 +21,12 @@ return new class extends Migration
             $table->integer('people_without_mask');
             $table->date('date');
             $table->time('time');
+            $table->integer('hours')->nullable();
+            $table->integer('minutes')->nullable();
+            $table->integer('seconds')->nullable();
         });
-        
     }
+    
 
     
     /**
