@@ -14,8 +14,6 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-   
-
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
@@ -42,6 +40,9 @@
                             <li><a class="dropdown-item" href="{{ route('addstream') }}">Add Stream</a></li>
                             <li><a class="dropdown-item" href="{{ route('streamlist') }}">Stream List</a></li>
                             <li><a class="dropdown-item" href="{{ route('mqqtconf') }}">Mqqt Config</a></li>
+                             <li><a class="dropdown-item" href="{{ route('rtconfig') }}">Real Time config</a></li>
+
+                            
                         </ul>
                     </div>
                 

@@ -21,13 +21,13 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/streamlist', [StreamController::class, 'showStream'])->name('streamlist');//done
 
     //Endpoint buat halaman raw stream
-    Route::get('/stream/{id}/raw', [StreamController::class, 'rawstream'])->name('rawstream');
+    Route::get('/stream/{id}/raw', [StreamController::class, 'rawstream'])->name('rawstream');//done
     
     //Endpoint buat display gambar 
     Route::get('/private/img/{imageName}', [FileController::class, 'showimage'])->name('img.show');//done
 
     //Endpoint buat display JSON data terbaru yang ada di collection cd_statistics 
-    Route::get('/realtime/{deviceid}', [CdStatisticsController::class, 'realtime'])->name('cd.realtime');
+    Route::get('/realtime/{deviceid}', [CdStatisticsController::class, 'realtime'])->name('cd.realtime');//done
 
     //Endpoint buat view realtime realtime linechart
     Route::get('/rtlc/{deviceid}', [CdStatisticsController::class, 'rtlc'])->name('rtlc');
@@ -36,8 +36,8 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/rtsr/{deviceid}', [CdStatisticsController::class, 'rtsr'])->name('rtsr');
     
     //Endpoint buat display data record collection cdstatistics
-    Route::get('/datarecord/{id}', [CdStatisticsController::class, 'showlist'])->name('datarecord');
-    Route::get('/datarecord/{id}/{date}', [CdStatisticsController::class, 'showlistdetail'])->name('datarecorddetail');
+    Route::get('/datarecord/{id}', [CdStatisticsController::class, 'showlist'])->name('datarecord');//done
+    Route::get('/datarecord/{id}/{date}', [CdStatisticsController::class, 'showlistdetail'])->name('datarecorddetail');//done
 
     //Endpoint buat display statistic crowd detection yang difilter 
     Route::get('/statistic/{id}/filter', [CdStatisticsController::class, 'showplainfilt'])->name('cdstatisticfilt');
@@ -48,10 +48,15 @@ Route::middleware(['auth'])->group(function() {
 
     //Endpoint buat export data ke excel 
     Route::get('/excelexport', [ExportController::class, 'exportToExcel'])->name('ex.export');
+
+    
 });
 
 //Grup Endpoint khusus user terautentikasi dan mempunyai role 'admin'
 Route::middleware(['admin'])->group(function() {
+
+    Route::get('/rtconfig', [CdStatisticsController::class, 'rtconfig'])->name('rtconfig');
+    Route::post('/rtmqqtconfigStore', [CdStatisticsController::class, 'rtconfigstore'])->name('rtconfigstore');//done
 
     //Endpoint buat export data ke excel 
     Route::post('/singledeldatarecord', [CdStatisticsController::class, 'singledeldatarecord'])->name('singledeldatarecord');//done

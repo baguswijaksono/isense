@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\cdrtconfig;
 use App\Models\cdStatistic;
 use App\Models\Rtsp;
 use Illuminate\Http\Request;
@@ -10,6 +11,60 @@ use Carbon\Carbon;
 
 class CdStatisticsController extends Controller {
 
+    public function rtconfig(){
+        $mqtt = cdrtconfig::all();
+        $count = $mqtt->count();
+        if ($count > 0) {
+            $mqtt = cdrtconfig::first();
+
+            return view("mqqtcon.rt" , [
+                'data' => $mqtt
+            ]);
+
+        } else {
+            return view("mqqtcon.rt" , [
+                'data' => null
+            ]);
+
+        }
+
+    }
+
+    public function rtconfigstore(request $request){
+        $mqtt = cdrtconfig::all();
+        $count = $mqtt->count();
+        if ($count > 0) {
+            $mqtt = cdrtconfig::first();
+
+            if ($mqtt) {
+                $data = [
+                    'latestRecordtoGet' => $request->input('latestRecordtoGet'),
+                ];
+            
+                $mqtt->update($data); 
+            
+                return redirect()->route('rtconfig');
+            } else {
+
+            }
+            
+
+        } else {
+            
+            $data = [
+                'latestRecordtoGet' => $request->input('latestRecordtoGet'),
+            ];
+            if($data){
+                cdrtconfig::create($data);
+                return redirect()->route('rtconfig');
+            }
+
+        }
+
+     
+
+    }
+
     public function rtlc($deviceId) {
         return view('rtlc', ['deviceid' => $deviceId]);
     }
@@ -17,13 +72,13 @@ class CdStatisticsController extends Controller {
     public function rtsr($deviceId) {
         return view('rtsr', ['deviceid' => $deviceId]);
     }
-
     public function realtime($deviceid) {
+        $mqtt = cdrtconfig::first();
         $data = cdStatistic::where('deviceid', $deviceid)
             ->latest()
-            ->take(10)
+            ->take($mqtt->latestRecordtoGet)
             ->get();
-
+    
         return response()->json(['data' => $data]);
     }
 
@@ -75,10 +130,10 @@ class CdStatisticsController extends Controller {
 
     public function showplainfilt($id) {
         $listdata = Rtsp::all();
-
+        $mqtt = cdrtconfig::first();
         $data = CdStatistic::where('deviceid', $id)
             ->latest()
-            ->take(10)
+            ->take($mqtt->latestRecordtoGet)
             ->orderBy('time', 'asc')
             ->get();
 
