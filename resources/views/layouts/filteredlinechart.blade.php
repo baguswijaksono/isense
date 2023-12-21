@@ -6,42 +6,54 @@
     var data = {
         labels: [
             @foreach ($data as $cdStat)
-                '{{ date('H:i', strtotime($cdStat->time)) }}',
+                '{{ date('H:i:s', strtotime($cdStat->time)) }}',
             @endforeach
         ],
         datasets: [{
-            label: 'People on Crowd 1',
-            data: [
-                @foreach ($data as $cdStat)
-                    {{ $cdStat->peoplecount }},
-                @endforeach
-            ],
-            borderColor: 'blue',
-            backgroundColor: 'rgba(0, 0, 255, 0.2)',
-            borderWidth: 2,
-        },
-        {
-            label: 'People on Crowd 2',
-            data: [
-                @foreach ($data as $cdStat)
-                    {{ $cdStat->people_without_mask }},
-                @endforeach
-            ],
-            borderColor: 'red',
-            backgroundColor: 'rgba(255, 0, 0, 0.2)',
-            borderWidth: 2,
-        },
-        {
-            label: 'People on Crowd 3',
-            data: [
-                @foreach ($data as $cdStat)
-                    {{ $cdStat->people_with_mask }},
-                @endforeach
-            ],
-            borderColor: 'green',
-            backgroundColor: 'rgba(0, 255, 0, 0.2)',
-            borderWidth: 2,
-        }]
+                label: 'People on Crowd',
+                data: [
+                    @foreach ($data as $cdStat)
+                        {{ $cdStat->peoplecount }},
+                    @endforeach
+                ],
+                borderColor: 'blue',
+                backgroundColor: 'rgba(0, 0, 255, 0.2)',
+                borderWidth: 2,
+            },
+            {
+                label: 'People without mask',
+                data: [
+                    @foreach ($data as $cdStat)
+                        {{ $cdStat->people_without_mask }},
+                    @endforeach
+                ],
+                borderColor: 'red',
+                backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                borderWidth: 2,
+            },
+            {
+                label: 'People with mask',
+                data: [
+                    @foreach ($data as $cdStat)
+                        {{ $cdStat->people_with_mask }},
+                    @endforeach
+                ],
+                borderColor: 'green',
+                backgroundColor: 'rgba(0, 255, 0, 0.2)',
+                borderWidth: 2,
+            },
+            {
+                label: 'Max Crowd Boundaries',
+                data: [
+                    @foreach ($data as $cdStat)
+                        {{ $maxcrowd }},
+                    @endforeach
+                ],
+                borderColor: 'yellow',
+                backgroundColor: 'rgba(255, 255, 0, 0.2)',
+                borderWidth: 2,
+            }
+        ]
     };
 
     var options = {

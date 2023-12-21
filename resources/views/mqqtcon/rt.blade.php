@@ -8,7 +8,15 @@
 
             <div class="mb-3">
                 <label for="latestRecordtoGet" class="form-label">latestRecordtoGet</label>
-                <input type="text" class="form-control" name="latestRecordtoGet" id="latestRecordtoGet" value="{{ $data->latestRecordtoGet ?? '' }}">
+                <input type="text" class="form-control" name="latestRecordtoGet" id="latestRecordtoGet"
+                    value="{{ $data->latestRecordtoGet ?? '' }}">
+                <div id="hosthelp" class="form-text">Example 10</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="maxcrowd" class="form-label">maxcrowd</label>
+                <input type="text" class="form-control" name="maxcrowd" id="maxcrowd"
+                    value="{{ $data->latestRecordtoGet ?? '' }}">
                 <div id="hosthelp" class="form-text">Example 10</div>
             </div>
 

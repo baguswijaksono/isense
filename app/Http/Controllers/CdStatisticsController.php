@@ -9,20 +9,22 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 
-class CdStatisticsController extends Controller {
+class CdStatisticsController extends Controller
+{
 
-    public function rtconfig(){
+    public function rtconfig()
+    {
         $mqtt = cdrtconfig::all();
         $count = $mqtt->count();
         if ($count > 0) {
             $mqtt = cdrtconfig::first();
 
-            return view("mqqtcon.rt" , [
+            return view("mqqtcon.rt", [
                 'data' => $mqtt
             ]);
 
         } else {
-            return view("mqqtcon.rt" , [
+            return view("mqqtcon.rt", [
                 'data' => null
             ]);
 
@@ -30,7 +32,8 @@ class CdStatisticsController extends Controller {
 
     }
 
-    public function rtconfigstore(request $request){
+    public function rtconfigstore(request $request)
+    {
         $mqtt = cdrtconfig::all();
         $count = $mqtt->count();
         if ($count > 0) {
@@ -39,73 +42,84 @@ class CdStatisticsController extends Controller {
             if ($mqtt) {
                 $data = [
                     'latestRecordtoGet' => $request->input('latestRecordtoGet'),
+                    'maxcrowd' => $request->input('maxcrowd'),
                 ];
-            
-                $mqtt->update($data); 
-            
+
+                $mqtt->update($data);
+
                 return redirect()->route('rtconfig');
             } else {
 
             }
-            
+
 
         } else {
-            
             $data = [
                 'latestRecordtoGet' => $request->input('latestRecordtoGet'),
+                'maxcrowd' => $request->input('maxcrowd'),
             ];
-            if($data){
+            if ($data) {
                 cdrtconfig::create($data);
                 return redirect()->route('rtconfig');
             }
 
         }
 
-     
+
 
     }
 
-    public function rtlc($deviceId) {
-        return view('rtlc', ['deviceid' => $deviceId]);
+    public function rtlc($deviceId)
+    {
+        $maxcrowd = cdrtconfig::first()->maxcrowd;
+        return view('rtlc', ['deviceid' => $deviceId, 'maxcrowd' => $maxcrowd]);
     }
 
-    public function rtsr($deviceId) {
+    public function rtsr($deviceId)
+    {
         return view('rtsr', ['deviceid' => $deviceId]);
     }
-    public function realtime($deviceid) {
+    public function realtime($deviceid)
+    {
         $mqtt = cdrtconfig::first();
         $data = cdStatistic::where('deviceid', $deviceid)
             ->latest()
             ->take($mqtt->latestRecordtoGet)
+            ->orderBy('time', 'asc')
             ->get();
-    
+
         return response()->json(['data' => $data]);
     }
 
 
-    public function showrt($deviceid) {
-        return view('statistic.cdstatisticrt', ['deviceid' => $deviceid]);
+
+    public function showrt($deviceid)
+    {
+
+        return view('statistic.cdstatisticrt', ['deviceid' => $deviceid,]);
     }
 
-    public function delrecord(Request $request) {
+    public function delrecord(Request $request)
+    {
         $id = $request->input('id');
         $date = $request->input('date');
         $data = cdStatistic::where('deviceid', $id)
             ->where('date', $date)
             ->delete();
-        if($data) {
+        if ($data) {
             return back();
         } else {
             return back();
         }
     }
 
-    public function singledeldatarecord(Request $request) {
+    public function singledeldatarecord(Request $request)
+    {
         $id = $request->input('id');
 
         $data = cdStatistic::find($id);
 
-        if($data) {
+        if ($data) {
             $data->delete();
             return redirect()->back();
         } else {
@@ -113,13 +127,15 @@ class CdStatisticsController extends Controller {
         }
     }
 
-    public function showlist($id) {
+    public function showlist($id)
+    {
         $data = cdStatistic::where('deviceid', $id)->groupBy('date')->get();
 
         return view('statistic.statisticlist', ['data' => $data, 'id' => $id]);
     }
 
-    public function showlistdetail($id, $date) {
+    public function showlistdetail($id, $date)
+    {
         $data = cdStatistic::where('deviceid', $id)
             ->where('date', $date)
             ->get();
@@ -128,7 +144,8 @@ class CdStatisticsController extends Controller {
 
     }
 
-    public function showplainfilt($id) {
+    public function showplainfilt($id)
+    {
         $listdata = Rtsp::all();
         $mqtt = cdrtconfig::first();
         $data = CdStatistic::where('deviceid', $id)
@@ -137,17 +154,18 @@ class CdStatisticsController extends Controller {
             ->orderBy('time', 'asc')
             ->get();
 
-        
+
         if ($data->count() === 0) {
             $first = $data->first();
             $date = $first->date;
             $time = $first->time;
             $last = $data->last();
             $enddate = $last->date;
+            $maxcrowd = cdrtconfig::first()->maxcrowd;
             $endtime = $last->time;
-    
+
             return view('statistic.cdstatistic', [
-                'nodata' => true, 
+                'nodata' => true,
                 'finenddate' => $enddate,
                 'date' => $date,
                 'from' => $time,
@@ -155,7 +173,7 @@ class CdStatisticsController extends Controller {
                 'listdata' => $listdata,
                 'data' => $data,
                 'device' => $id,
-     
+
             ]);
         } else {
             $first = $data->first();
@@ -164,19 +182,21 @@ class CdStatisticsController extends Controller {
             $last = $data->last();
             $enddate = $last->date;
             $endtime = $last->time;
-    
+            $maxcrowd = cdrtconfig::first()->maxcrowd;
+
             $greatestPeopleCount = $data->max('peoplecount');
             $lowestPeopleCount = $data->min('peoplecount');
-    
+
             $timeOfGreatestPeopleCount = $data->where('peoplecount', $greatestPeopleCount)->pluck('time')->first();
             $timeOfLowestPeopleCount = $data->where('peoplecount', $lowestPeopleCount)->pluck('time')->first();
-    
+
             $averagePeopleCount = $data->avg('peoplecount');
             $totalDataRecord = $data->count();
-    
-    
+
+
             return view('statistic.cdstatistic', [
-                'nodata' => false, 
+                'nodata' => false,
+                'maxcrowd' => $maxcrowd,
                 'finenddate' => $enddate,
                 'date' => $date,
                 'from' => $time,
@@ -192,37 +212,38 @@ class CdStatisticsController extends Controller {
                 'totalDataRecord' => $totalDataRecord
             ]);
         }
-        
 
-  
+
+
 
 
     }
 
 
-    public function show($id, $date, $enddate, $ftime, $totime) {
+    public function show($id, $date, $enddate, $ftime, $totime)
+    {
         $listdata = Rtsp::all();
 
-        if(!$date) {
+        if (!$date) {
             $currentDate = Carbon::now()->setTimezone('Asia/Jakarta')->format('D-m-y');
         } else {
             $currentDate = $date;
         }
 
-        if(!$enddate) {
+        if (!$enddate) {
 
         } else {
             $finenddate = $enddate;
         }
 
-        if(!$ftime) {
+        if (!$ftime) {
             $hoursBefore = 1;
             $beforeTime = Carbon::now()->subHours($hoursBefore)->setTimezone('Asia/Jakarta')->format('H:i:s');
         } else {
             $beforeTime = $ftime;
         }
 
-        if(!$totime) {
+        if (!$totime) {
             $currentTime = Carbon::now('Asia/Jakarta')->format('H:i:s');
         } else {
             $currentTime = $totime;
@@ -239,8 +260,9 @@ class CdStatisticsController extends Controller {
             ->orderBy('peoplecount', 'desc')
             ->orderBy('time', 'asc')
             ->get();
+        $maxcrowd = cdrtconfig::first()->maxcrowd;
 
-        if($data2->count() > 0) {
+        if ($data2->count() > 0) {
             $greatestPeopleCountRecord = $data2->first();
             $lowestPeopleCountRecord = $data2->last();
             $greatestPeopleCount = $greatestPeopleCountRecord->peoplecount;
@@ -251,8 +273,9 @@ class CdStatisticsController extends Controller {
             $totalDataRecord = $data->count();
 
             return view('statistic.cdstatistic', [
-                'nodata' => false, 
+                'nodata' => false,
                 'data' => $data,
+                'maxcrowd' => $maxcrowd,
                 'data2' => $data2,
                 'device' => $id,
                 'from' => $beforeTime,
@@ -267,7 +290,7 @@ class CdStatisticsController extends Controller {
                 'averagePeopleCount' => $averagePeopleCount,
                 'totalDataRecord' => $totalDataRecord
             ]);
-        }else{
+        } else {
             return view('statistic.cdstatistic', [
                 'listdata' => $listdata,
                 'to' => $currentTime,
@@ -276,9 +299,9 @@ class CdStatisticsController extends Controller {
                 'date' => $currentDate,
                 'device' => $id,
                 'data' => $data,
-                'nodata' => true, 
+                'nodata' => true,
             ]);
-            
+
         }
 
     }

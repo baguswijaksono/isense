@@ -1,6 +1,6 @@
 #!/bin/bash
 
-directory_path=$(dirname "$0")  # Get the directory where the script is located
+directory_path=$(dirname "$0") 
 num_files_to_keep=10
 
 while true; do
@@ -12,5 +12,5 @@ while true; do
             echo "Deleted: $file"
         done
     fi
-    sleep 10 # Check and delete files every 60 seconds (adjust as needed)
+    sleep 10 
 done
