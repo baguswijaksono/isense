@@ -91,42 +91,61 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
   <!-- Your custom JavaScript -->
-  <script>
-    // Function to fetch data from the API endpoint
-    function fetchData() {
-      $.ajax({
-        url: 'http://127.0.0.1:8000/alerts/iSense1',
-        method: 'GET',
-        success: function(response) {
-          // Extract data from the response
-          const { data } = response;
+<script>
+  // Function to fetch data from the API endpoint
+  function fetchData() {
+    $.ajax({
+      url: 'http://127.0.0.1:8000/alerts/iSense1',
+      method: 'GET',
+      success: function(response) {
+        const { data } = response;
 
-          // Create the Bootstrap alert dynamically
-          const alertHTML = `
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              Device ID: ${data.deviceid} | People Count: ${data.peoplecount} | Time: ${data.time}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          `;
+        const alertHTML = `
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Device ID: ${data.deviceid} | People Count: ${data.peoplecount} | Time: ${data.time}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" data-id="${data._id}">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        `;
 
-          // Display the alert in the alertContainer
-          $('#alertContainer').html(alertHTML);
-        },
-        error: function(error) {
-          console.error('Error fetching data:', error);
-        }
-      });
-    }
-
-    // Call the fetchData function when the page loads
-    $(document).ready(function() {
-      fetchData(); // Fetch data initially
-      // Refresh data every 10 seconds
-      setInterval(fetchData, 10000);
+        $('#alertContainer').html(alertHTML);
+      },
+      error: function(error) {
+        console.error('Error fetching data:', error);
+      }
     });
-  </script>
+  }
+
+  // Function to mark the alert as seen
+  function markAsSeen(alertId) {
+    $.ajax({
+      url: `/markasseen/${alertId}`,
+      method: 'GET',
+      success: function(response) {
+        // Handle success if needed
+      },
+      error: function(error) {
+        console.error('Error marking as seen:', error);
+      }
+    });
+  }
+
+  // Event listener for close button clicks within the alert container
+  $(document).on('click', '.alert button.close', function() {
+    const alertId = $(this).data('id');
+    markAsSeen(alertId);
+    $(this).closest('.alert').hide(); // or .remove() if you want to remove it
+  });
+
+  // Call fetchData function when the page loads
+  $(document).ready(function() {
+    fetchData(); // Fetch data initially
+    // Refresh data every 10 seconds
+    setInterval(fetchData, 10000);
+  });
+</script>
+
 
         </div>
     </div>

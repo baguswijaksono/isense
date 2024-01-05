@@ -51,7 +51,28 @@ class CdStatisticsController extends Controller
         }
     }
     
+    public function ocarchive(){
+        $data = ovcrowdalerts::where('seen', true)->get();
+        $count = $data->count();
+        
+        return view("statistic.ocarchive", [
+            'data' => ($count > 0) ? $data : null
+        ]);
+
+    }
+
+    public function socarchivedel(Request $request){
+        $alert = ovcrowdalerts::find($request->input('id'));
     
+        if($alert){
+            $alert->delete();
+            // Optionally, you might want to redirect or return a success message here
+            return redirect()->back()->with('success', 'Alert deleted successfully');
+        } else {
+            // Alert not found, handle this scenario as per your requirements
+            return redirect()->back()->with('error', 'Alert not found');
+        }
+    }
     
 
     public function overcrowdhs()

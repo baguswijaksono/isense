@@ -48,7 +48,9 @@ Route::middleware(['auth'])->group(function() {
 
     //Endpoint untuk export data ke excel 
     Route::get('/excelexport', [ExportController::class, 'exportToExcel'])->name('ex.export');
+    Route::get('/ocarchive', [CdStatisticsController::class, 'ocarchive'])->name('ocarchive');
 
+    Route::post('/ocarchive/del', [CdStatisticsController::class, 'socarchivedel'])->name('socarchivedel');
     Route::get('/overcrowd', [CdStatisticsController::class, 'overcrowdhs'])->name('overcrowd');
     Route::get('/alerts/{deviceid}', [CdStatisticsController::class, 'alerts'])->name('alerts');
 

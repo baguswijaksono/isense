@@ -41,10 +41,28 @@
                             <li><a class="dropdown-item" href="{{ route('streamlist') }}">Stream List</a></li>
                             <li><a class="dropdown-item" href="{{ route('mqqtconf') }}">Mqqt Config</a></li>
                             <li><a class="dropdown-item" href="{{ route('rtconfiglist') }}">Real Time config</a></li>
-                            <li><a class="dropdown-item" href="{{ route('overcrowd') }}">Overcrowd</a></li>
-                            
+                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">Overcrowd</a></li>
+
                         </ul>
                     </div>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Chose Data</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <a class="btn btn-primary" href="{{ route('overcrowd') }}"> Overcrowd Alert</a>
+                                    <a class="btn btn-dark" href="{{ route('ocarchive') }}"> Overcrowd Archive</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 @elseif(Auth::check() && Auth::user()->role != 'admin')
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
