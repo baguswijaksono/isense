@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\Mqtt;
+use App\Models\cdrtconfig;
 use App\Models\cdStatistic;
+use App\Models\ovcrowdalerts;
 use Illuminate\Console\Command;
 use PhpMqtt\Client\MqttClient;
 
@@ -51,7 +53,20 @@ class MqttSubscriber extends Command
                 'seconds' => $seconds, 
             ]);
 
+            $maxcrowd = cdrtconfig::first()->maxcrowd;
 
+            if(trim($parsedData['people_total']) > $maxcrowd){
+                ovcrowdalerts::Create([
+                    "deviceid" => trim($parsedData['device_id']),
+                    "peoplecount" => trim($parsedData['people_total']),            
+                    'time' => date('H:i:s', $parsedData['timestamp']),
+                    'date' => date('Y-m-d', $parsedData['timestamp']),
+                    'hours' => $hours,
+                    'minutes' => $minutes, 
+                    'seconds' => $seconds, 
+                ]);
+
+            }
 
         });
 

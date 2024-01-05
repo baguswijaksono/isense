@@ -17,48 +17,47 @@ Route::middleware(['auth'])->group(function() {
     //Endpoint setelah berhasil autentikasi
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');//done
 
-    //Endpoint buat list raw stream yang tersedia
+    //Endpoint untuk list raw stream yang tersedia
     Route::get('/streamlist', [StreamController::class, 'showStream'])->name('streamlist');//done
 
-    //Endpoint buat halaman raw stream
+    //Endpoint untuk halaman raw stream
     Route::get('/stream/{id}/raw', [StreamController::class, 'rawstream'])->name('rawstream');//done
     
-    //Endpoint buat display gambar 
+    //Endpoint untuk dis12play gambar 
     Route::get('/private/img/{imageName}', [FileController::class, 'showimage'])->name('img.show');//done
 
-    //Endpoint buat display JSON data terbaru yang ada di collection cd_statistics 
+    //Endpoint untuk display JSON data terbaru yang ada di collection cd_statistics 
     Route::get('/realtime/{deviceid}', [CdStatisticsController::class, 'realtime'])->name('cd.realtime');//done
 
-    //Endpoint buat view realtime realtime linechart
+    //Endpoint untuk view realtime realtime linechart
     Route::get('/rtlc/{deviceid}', [CdStatisticsController::class, 'rtlc'])->name('rtlc');
 
-    //Endpoint buat view realtime statistic report
+    //Endpoint untuk view realtime statistic report
     Route::get('/rtsr/{deviceid}', [CdStatisticsController::class, 'rtsr'])->name('rtsr');
     
-    //Endpoint buat display data record collection cdstatistics
+    //Endpoint untuk display data record collection cdstatistics
     Route::get('/datarecord/{id}', [CdStatisticsController::class, 'showlist'])->name('datarecord');//done
     Route::get('/datarecord/{id}/{date}', [CdStatisticsController::class, 'showlistdetail'])->name('datarecorddetail');//done
 
-    //Endpoint buat display statistic crowd detection yang difilter 
+    //Endpoint untuk display statistic crowd detection yang difilter 
     Route::get('/statistic/{id}/filter', [CdStatisticsController::class, 'showplainfilt'])->name('cdstatisticfilt');
     Route::get('/statistic/{id}/{date}/{enddate}/{ftime}/{totime}', [CdStatisticsController::class, 'show'])->name('cdstatistic');
 
-    //Endpoint buat display statistic crowd detection secara realtime 
+    //Endpoint untuk display statistic crowd detection secara realtime 
     Route::get('/statistic/{id}/realtime', [CdStatisticsController::class, 'showrt'])->name('cdstatisticrt');
 
-    //Endpoint buat export data ke excel 
+    //Endpoint untuk export data ke excel 
     Route::get('/excelexport', [ExportController::class, 'exportToExcel'])->name('ex.export');
-
     
 });
 
 //Grup Endpoint khusus user terautentikasi dan mempunyai role 'admin'
 Route::middleware(['admin'])->group(function() {
-
+     //Endpoint untuk pengaturan mqqt 
     Route::get('/rtconfig', [CdStatisticsController::class, 'rtconfig'])->name('rtconfig');
     Route::post('/rtmqqtconfigStore', [CdStatisticsController::class, 'rtconfigstore'])->name('rtconfigstore');//done
 
-    //Endpoint buat export data ke excel 
+    //Endpoint untuk export data ke excel 
     Route::post('/singledeldatarecord', [CdStatisticsController::class, 'singledeldatarecord'])->name('singledeldatarecord');//done
     Route::post('/datarecord/del', [CdStatisticsController::class, 'delrecord'])->name('delrecord');//done
 
@@ -73,10 +72,10 @@ Route::middleware(['admin'])->group(function() {
     //Endpoint Delete data raw stream
     Route::post('/delstream', [StreamController::class, 'delStream'])->name('delstream');//done
     
-    //Endpoint buat ngatur configurasi subscriber mqqt 
+    //Endpoint untuk ngatur configurasi subscriber mqqt 
     Route::get('/mqqtconfig', [MqqtController::class, 'index'])->name('mqqtconf');//done
 
-    //Endpoint buat store data subscriber mqqt 
+    //Endpoint untuk store data subscriber mqqt 
     Route::post('/mqqtconfigStore', [MqqtController::class, 'store'])->name('storeMqqconf');//done
 });
 
