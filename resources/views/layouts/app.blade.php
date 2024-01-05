@@ -40,22 +40,21 @@
                             <li><a class="dropdown-item" href="{{ route('addstream') }}">Add Stream</a></li>
                             <li><a class="dropdown-item" href="{{ route('streamlist') }}">Stream List</a></li>
                             <li><a class="dropdown-item" href="{{ route('mqqtconf') }}">Mqqt Config</a></li>
-                             <li><a class="dropdown-item" href="{{ route('rtconfig') }}">Real Time config</a></li>
-
+                            <li><a class="dropdown-item" href="{{ route('rtconfiglist') }}">Real Time config</a></li>
+                            <li><a class="dropdown-item" href="{{ route('overcrowd') }}">Overcrowd</a></li>
                             
                         </ul>
                     </div>
-                
                 @elseif(Auth::check() && Auth::user()->role != 'admin')
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Stream
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('streamlist') }}">Stream List</a></li>
-                    </ul>
-                </div>
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Stream
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('streamlist') }}">Stream List</a></li>
+                        </ul>
+                    </div>
                 @endif
 
 
@@ -107,7 +106,7 @@
                                 </div>
                             </li>
 
-                            
+
                         @endguest
                     </ul>
                 </div>

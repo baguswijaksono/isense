@@ -48,13 +48,19 @@ Route::middleware(['auth'])->group(function() {
 
     //Endpoint untuk export data ke excel 
     Route::get('/excelexport', [ExportController::class, 'exportToExcel'])->name('ex.export');
+
+    Route::get('/overcrowd', [CdStatisticsController::class, 'overcrowdhs'])->name('overcrowd');
+    Route::get('/alerts/{deviceid}', [CdStatisticsController::class, 'alerts'])->name('alerts');
+
+    Route::get('/markasseen/{alertsid}', [CdStatisticsController::class, 'markasseen'])->name('markasseen');
     
 });
 
 //Grup Endpoint khusus user terautentikasi dan mempunyai role 'admin'
 Route::middleware(['admin'])->group(function() {
      //Endpoint untuk pengaturan mqqt 
-    Route::get('/rtconfig', [CdStatisticsController::class, 'rtconfig'])->name('rtconfig');
+    Route::get('/rtconfig', [CdStatisticsController::class, 'rtconfiglist'])->name('rtconfiglist');
+    Route::get('/rtconfig/{deviceid}', [CdStatisticsController::class, 'rtconfig'])->name('rtconfig');
     Route::post('/rtmqqtconfigStore', [CdStatisticsController::class, 'rtconfigstore'])->name('rtconfigstore');//done
 
     //Endpoint untuk export data ke excel 

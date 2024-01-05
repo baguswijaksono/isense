@@ -10,7 +10,7 @@ class cdrtconfig extends Model
     protected $connection = 'mongodb';
     protected $collection = 'cdrtconfig';
 
-    protected $fillable = ['latestRecordtoGet' , 'maxcrowd'];
+    protected $fillable = ['deviceid','latestRecordtoGet' , 'maxcrowd'];
 
     use HasFactory;
 }

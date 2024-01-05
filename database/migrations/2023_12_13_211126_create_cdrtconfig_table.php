@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('cdrtconfig', function (Blueprint $table) {
             $table->id();
+            $table->string('deviceid');
+            $table->integer('latestRecordtoGet');
+            $table->integer('maxcrowd');
             $table->timestamps();
         });
     }

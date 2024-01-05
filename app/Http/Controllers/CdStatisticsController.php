@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\cdrtconfig;
 use App\Models\cdStatistic;
+use App\Models\ovcrowdalerts;
 use App\Models\Rtsp;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -12,23 +13,65 @@ use Carbon\Carbon;
 class CdStatisticsController extends Controller
 {
 
-    public function rtconfig()
+    public function rtconfig($deviceid)
     {
         $mqtt = cdrtconfig::all();
         $count = $mqtt->count();
+        
         if ($count > 0) {
-            $mqtt = cdrtconfig::first();
-
+            $mqtt = cdrtconfig::where('deviceid', $deviceid)->get();
             return view("mqqtcon.rt", [
                 'data' => $mqtt
             ]);
-
         } else {
             return view("mqqtcon.rt", [
                 'data' => null
             ]);
-
         }
+    }
+
+    public function alerts($deviceid) {
+        $latestData = ovcrowdalerts::where('deviceid', $deviceid)
+            ->where('seen', false) // Add the condition for 'seen' being false
+            ->latest() 
+            ->first(); 
+    
+        return response()->json(['data' => $latestData]);
+    }
+    
+
+    public function markAsSeen($id){
+        $data = Ovcrowdalerts::find($id);
+        if ($data) {
+            $data->seen = true;
+            $data->save();
+            echo $data;
+        } else {
+            echo "No data found for ID: $id";
+        }
+    }
+    
+    
+    
+
+    public function overcrowdhs()
+    {
+        $data = ovcrowdalerts::where('seen', false)->get();
+        $count = $data->count();
+        
+        return view("statistic.overcrowd", [
+            'data' => ($count > 0) ? $data : null
+        ]);
+    }
+    
+    
+
+    public function rtconfiglist()
+    {
+        $mqtt = cdrtconfig::all();
+        return view("mqqtcon.rtlist", [
+            'data' => $mqtt
+        ]);
 
     }
 
@@ -37,7 +80,7 @@ class CdStatisticsController extends Controller
         $mqtt = cdrtconfig::all();
         $count = $mqtt->count();
         if ($count > 0) {
-            $mqtt = cdrtconfig::first();
+            $mqtt = cdrtconfig::where('deviceid', $request->input('deviceid'))->first();
 
             if ($mqtt) {
                 $data = [
@@ -47,7 +90,7 @@ class CdStatisticsController extends Controller
 
                 $mqtt->update($data);
 
-                return redirect()->route('rtconfig');
+                return redirect()->route('rtconfig', ['deviceid' => $request->input('deviceid')]);
             } else {
 
             }
@@ -64,8 +107,6 @@ class CdStatisticsController extends Controller
             }
 
         }
-
-
 
     }
 
